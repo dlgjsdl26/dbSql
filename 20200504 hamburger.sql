@@ -96,8 +96,21 @@ WHERE ta.rank1 = bug.rank2;
 이를 개선하여 테이블을 한번만 읽는 형태로 쿼리를 개선 (fastfood 테이블을 1번만 사용)
 CASE, DECODE
 
-
-SELECT ROWNUM, a.*
+개별 햄버거점의 주소(파파이스, 맘스터치 제외하고 계산)
+SELECT ROWNUM rank, sido, sigungu, city_idx
+FROM
+    (SELECT sido, sigungu, Round((kfc + mac + bk) / lot, 2) city_idx
+    FROM
+    
+    (SELECT sido, sigungu, NVL(SUM(CASE WHEN gb = '롯데리아' THEN 1 END),1) lot,
+                           NVL(SUM(CASE WHEN gb = 'kfc' THEN 1 END),0) kfc,
+                           NVL(SUM(CASE WHEN gb = '맥도날드' THEN 1 END),0) mac,
+                           NVL(SUM(CASE WHEN gb = '버거킹' THEN 1 END),0) bk
+    FROM fastfood
+    WHERE gb IN ('버거킹', 'KFC', '맥도날드', '롯데리아')
+    GROUP BY sido, sigungu)
+    ORDER BY city_idx DESC);
+/*SELECT ROWNUM, a.*
 FROM
 
 (SELECT sido, sigungu, ROUND((bug+kf+mac)/lot,2) index2
@@ -108,10 +121,12 @@ FROM fastfood
 GROUP BY sido, sigungu)
 
 WHERE lot != 0
-ORDER BY index2 DESC) a;
+ORDER BY index2 DESC) a;*/
 
 
 
 
 과제3]
 햄버거 지수 sql을 다른 형태로 도전하기
+
+SELECT 시도, 시군구, (KFC 스칼라 서브쿼리),
