@@ -36,6 +36,26 @@ deptno(=), empno(=)
 deptno, hiredate
 
 
+idx4]
+
+CREATE UNIQUE INDEX idx_u_emp_01 ON emp (empno);
+CREATE INDEX idx_emp_02 ON emp (deptno, empno, sal);
+CREATE UNIQUE INDEX idx_u_dept_01 ON dept (deptno);
+CREATE INDEX idx_dept_02 ON dept (loc);
+
+emp
+empno(=)
+
+deptno(=), empno(like)
+
+deptno(=), sal(between)
+
+deptno(=)
+
+dept
+deptno(=)
+
+loc(=)
 
 
 
